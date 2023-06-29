@@ -29,19 +29,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Version from tag
         id: version-from-tag
-        uses: actions/github-script@v6
-        with:
-          script: |
-            return context.payload.ref.replace(/\/refs\/tags\/spring-rest-jpa/, '');
+        run: echo version=${GITHUB_REF_NAME//spring-rest-jpa\/} >> $GITHUB_OUTPUT
       - name: Docker Extract metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/mikouaj/spring-rest-jpa
           tags: |
-            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.tag.version-from-tag.result }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.tag.version-from-tag.result }}
-            type=semver,pattern={{major}},value=${{ steps.tag.version-from-tag.result }}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.version-from-tag.outputs.version }}
       - name: Docker build and push
         uses: docker/build-push-action@v4
         with:
