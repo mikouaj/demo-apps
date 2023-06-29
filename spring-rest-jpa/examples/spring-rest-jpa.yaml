@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: spring-rest-jpa
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-rest-jpa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: spring-rest-jpa
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: spring-rest-jpa
+    spec:
+      serviceAccountName: spring-rest-jpa
+      containers:
+      - name: spring-rest-jpa
+        image: ghcr.io/mikouaj/spring-rest-jpa:latest
+        args:
+        - --spring.config.location=file:/config/application.yaml
+        volumeMounts:
+        - name: spring-rest-jpa-config
+          mountPath: /config
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            scheme: HTTP
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            scheme: HTTP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 1024Mi
+      volumes:
+      - name: spring-rest-jpa-config
+        configMap:
+          name: spring-rest-jpa-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-rest-jpa
+spec:
+  selector:
+    app.kubernetes.io/name: spring-rest-jpa
+  ports:
+  - port: 8080
+    targetPort: http

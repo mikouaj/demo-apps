@@ -9,3 +9,10 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
