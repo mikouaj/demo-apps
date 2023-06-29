@@ -1,6 +1,5 @@
 name: Spring Rest JPA Release
 on:
-on:
   push:
     tags:
       - "spring-rest-jpa/v*"
