@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
 - examples/spring-rest-jpa.yaml
+# Uncomment for Google Managed Prometheus metrics scraping
+#- examples/spring-rest-jpa-gmp.yaml
 
 namespace: demo
 

@@ -23,29 +23,34 @@ spec:
         image: ghcr.io/mikouaj/spring-rest-jpa:latest
         args:
         - --spring.config.location=file:/config/application.yaml
+        env:
+        - name: JAVA_OPTS
+          value: -XX:MaxRAMPercentage=75
         volumeMounts:
         - name: spring-rest-jpa-config
           mountPath: /config
         ports:
         - name: http
           containerPort: 8080
-        readinessProbe:
+        startupProbe:
+          periodSeconds: 2
+          failureThreshold: 60
           httpGet:
             path: /actuator/health
-            port: 8080
+            port: http
             scheme: HTTP
         livenessProbe:
           httpGet:
             path: /actuator/health
-            port: 8080
+            port: http
             scheme: HTTP
         resources:
           limits:
-            cpu: 500m
+            cpu: 200m
             memory: 512Mi
           requests:
             cpu: 200m
-            memory: 1024Mi
+            memory: 512Mi
       volumes:
       - name: spring-rest-jpa-config
         configMap:
