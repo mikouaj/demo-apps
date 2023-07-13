@@ -5,3 +5,47 @@ and exposes the REST endpoint. The data is fetched from the relational database 
 Java Persistence API.
 
 [![Build](https://github.com/mikouaj/demo-apps/actions/workflows/build-spring-rest-jpa.yaml/badge.svg)](https://github.com/mikouaj/demo-apps/actions/workflows/build-spring-rest-jpa.yaml)
+
+## Usage
+
+The service exposes below endpoints:
+
+* `/books` returns collection of books
+
+In the addition to above, Spring Boot actuator endpoints are exposed per configuration.
+
+### Source code
+
+Prerequisites:
+
+* [JDK](https://openjdk.org/projects/jdk/17/) 17 or newer
+* [Maven](https://maven.apache.org/download.cgi)
+
+Build application from the source code.
+
+```sh
+mvn package
+java -jar target/spring-rest-jpa-0.0.1-SNAPSHOT.jar
+```
+
+### Container image
+
+1. Adjust `application.yaml` according to your needs
+2. Run the container
+  
+   ```sh
+   docker run -d  --name spring-rest-jpa \
+      -p 8080:8080 \
+      -v "`pwd`/application.yaml:/application.yaml" \
+      ghcr.io/mikouaj/spring-rest-jpa:latest 
+   ```
+
+### Kubernetes
+
+1. Adjust `application.yaml` according to your needs
+2. Adjust `kustomization.yaml` according to your needs
+3. Customize and apply Kubernetes manifests
+
+   ```sh
+   kubectl kustomize | kubectl apply -f
+   ```
