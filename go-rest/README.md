@@ -1,4 +1,4 @@
-# spring-rest-jpa
+# go-rest
 
 The folder contains source code of a simple Go application that exposes the REST endpoint.
 

@@ -7,4 +7,8 @@ The following repository contains the source code and container images of variou
 * [spring-rest-jpa](./spring-rest-jpa/) is a simple Java application that uses Spring Boot framework
   and exposes the REST endpoint. The data is fetched from the relational database with
   Java Persistence API.
-* [go-rest](./go-rest/) is a simple Go application exposes the REST endpoint.
+* [go-rest](./go-rest/) is a simple Go application exposes the REST endpoint. The data on the REST
+  endpoint are generated locally.
+* [go-rest-client](./go-rest-client/) is a simple Go application exposes the REST endpoint. The data
+  on the REST endpoint are either generated locally or fetched from the remote URL.
+  
