@@ -11,4 +11,5 @@ The following repository contains the source code and container images of variou
   endpoint are generated locally.
 * [go-rest-client](./go-rest-client/) is a simple Go application exposes the REST endpoint. The data
   on the REST endpoint are either generated locally or fetched from the remote URL.
-  
+* [go-rest-cloud-storage](./go-rest-cloud-storage/) is a simple Go application exposes the REST endpoint.
+  The data on the REST endpoint is fetched from the Cloud Storage bucket.
