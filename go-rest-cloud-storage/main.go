@@ -15,11 +15,8 @@ import (
 )
 
 const (
-	PortEnvVar     = "GO_REST_CLIENT_PORT"
-	AppNameEnvVar  = "GO_REST_CLIENT_APP_NAME"
-	DataURLEnvVar  = "GO_REST_CLIENT_DATA_URL"
-	DefaultPort    = "8080"
-	DefaultAppName = "go-rest-client"
+	PortEnvVar  = "GO_REST_CLIENT_PORT"
+	DefaultPort = "8080"
 )
 
 func main() {

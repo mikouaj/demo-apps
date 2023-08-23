@@ -3,6 +3,8 @@
 The folder contains source code of a simple Go application that exposes the REST endpoint.
 The endpoint serves the data from the given Google Cloud Storage bucket.
 
+[![Build](https://github.com/mikouaj/demo-apps/actions/workflows/build-go-rest-cloud-storage.yaml/badge.svg)](https://github.com/mikouaj/demo-apps/actions/workflows/build-go-rest-cloud-storage.yaml)
+
 ## Usage
 
 The service exposes two endpoints:
