@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	"github.com/mikouaj/go-rest-cloud-storage/storage"
+	"github.com/mikouaj/go-rest-cloud-storage/internal/storage"
 )
 
 const (

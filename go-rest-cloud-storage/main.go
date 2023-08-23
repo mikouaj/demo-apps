@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-logr/zapr"
 	"github.com/mikouaj/go-rest-cloud-storage/internal/controller"
-	"github.com/mikouaj/go-rest-cloud-storage/storage"
+	"github.com/mikouaj/go-rest-cloud-storage/internal/storage"
 	"go.uber.org/zap"
 )
 
