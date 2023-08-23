@@ -1,0 +1,50 @@
+name: Go Rest Cloud Storage Release
+on:
+  push:
+    tags:
+      - "go-rest-cloud-storage/v*"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./go-rest-cloud-storage
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.20'
+      - name: Get dependencies
+        run: go mod download
+      - name: Build
+        run: make build
+      - name: Test
+        run: make test
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Version from tag
+        id: version-from-tag
+        run: echo version=${GITHUB_REF_NAME//go-rest-cloud-storage\/} >> $GITHUB_OUTPUT
+      - name: Docker Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/mikouaj/go-rest-cloud-storage
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.version-from-tag.outputs.version }}
+      - name: Docker build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./go-rest-cloud-storage
+          file: ./go-rest-cloud-storage/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
