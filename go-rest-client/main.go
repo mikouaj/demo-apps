@@ -15,8 +15,10 @@ import (
 )
 
 const (
+	PortEnvVar     = "GO_REST_CLIENT_PORT"
 	AppNameEnvVar  = "GO_REST_CLIENT_APP_NAME"
 	DataURLEnvVar  = "GO_REST_CLIENT_DATA_URL"
+	DefaultPort    = "8080"
 	DefaultAppName = "go-rest-client"
 )
 
@@ -27,8 +29,12 @@ func main() {
 
 	ctrl := controller.New(getDataProviderUsingEnvs())
 	ctrl.SetLogger(log)
+	addr := ":" + DefaultPort
+	if port := os.Getenv(PortEnvVar); port != "" {
+		addr = ":" + port
+	}
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    addr,
 		Handler: ctrl,
 	}
 
