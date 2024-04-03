@@ -3,6 +3,7 @@ package controller
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/go-logr/logr"
@@ -15,6 +16,7 @@ type controller struct {
 	log            logr.Logger
 	pathHandlers   map[string]http.Handler
 	reqTotalMetric *prometheus.CounterVec
+	connOpenMetric prometheus.Gauge
 }
 
 type auditedResponseWriter struct {
@@ -34,6 +36,9 @@ func New() *controller {
 			Name: "go_rest_http_requests_total",
 			Help: "The total number of HTTP requests",
 		}, []string{"path", "status"}),
+		connOpenMetric: promauto.NewGauge(prometheus.GaugeOpts{
+			Name: "go_rest_http_connections",
+			Help: "The number of active and idle connections"}),
 	}
 	c.RegisterPathHandler("/healthz", http.HandlerFunc(healthzHandler))
 	c.RegisterPathHandler("/books", c.wrapHandlerWithAudit(http.HandlerFunc(booksHandler)))
@@ -47,6 +52,15 @@ func (c *controller) SetLogger(log logr.Logger) {
 
 func (c *controller) RegisterPathHandler(path string, handler http.Handler) {
 	c.pathHandlers[path] = handler
+}
+
+func (c *controller) ConnStateFunc(conn net.Conn, state http.ConnState) {
+	switch state {
+	case http.StateNew:
+		c.connOpenMetric.Inc()
+	case http.StateClosed, http.StateHijacked:
+		c.connOpenMetric.Dec()
+	}
 }
 
 func (c *controller) ServeHTTP(w http.ResponseWriter, r *http.Request) {

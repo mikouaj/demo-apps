@@ -21,8 +21,9 @@ func main() {
 	ctrl := controller.New()
 	ctrl.SetLogger(log)
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: ctrl,
+		Addr:      ":8080",
+		Handler:   ctrl,
+		ConnState: ctrl.ConnStateFunc,
 	}
 
 	go func() {
