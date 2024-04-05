@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/go-logr/zapr"
+	"github.com/mikouaj/go-rest/internal/config"
 	"github.com/mikouaj/go-rest/internal/controller"
 	"go.uber.org/zap"
 )
@@ -18,6 +19,10 @@ func main() {
 	zapConfig.Level = zap.NewAtomicLevelAt(-2)
 	log := zapr.NewLogger(zap.Must(zapConfig.Build()))
 
+	config, err := config.LoadFromEnv()
+	if err != nil {
+		log.Error(err, "failed to load configuration")
+	}
 	ctrl := controller.New()
 	ctrl.SetLogger(log)
 	srv := &http.Server{
@@ -27,8 +32,16 @@ func main() {
 	}
 
 	go func() {
-		log.Info("Starting HTTP server")
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		var err error
+		if config.ListenTLS {
+			log.Info("Starting HTTPS server")
+			srv.Addr = ":8443"
+			err = srv.ListenAndServeTLS(config.TLSCertPath, config.TLSKeyPath)
+		} else {
+			log.Info("Starting HTTP server")
+			err = srv.ListenAndServe()
+		}
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Error(err, "http server error")
 		}
 	}()
